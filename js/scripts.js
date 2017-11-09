@@ -24,7 +24,11 @@ $( document ).ready(function() {
 
 	function initCountryAutocomplete() {
 		$( "#country" ).autocomplete({
-			source: countriesArr
+			delay: 0.5,
+			source: countriesArr,
+			select: function(event, ui) {
+          console.log(event, ui);
+      }
 		});		
 	};
 
