@@ -1,30 +1,41 @@
 $( document ).ready(function() {
-	var availableTags = [
-		"ActionScript",
-		"AppleScript",
-		"Asp",
-		"BASIC",
-		"C",
-		"C++",
-		"Clojure",
-		"COBOL",
-		"ColdFusion",
-		"Erlang",
-		"Fortran",
-		"Groovy",
-		"Haskell",
-		"Java",
-		"JavaScript",
-		"Lisp",
-		"Perl",
-		"PHP",
-		"Python",
-		"Ruby",
-		"Scala",
-		"Scheme"
-	];
-	
-	$( "#autocomplete" ).autocomplete({
-		source: availableTags
+
+	var countriesArr = [],
+			countriesObj = {};
+
+	function getData() {
+		$.get( "http://api.vk.com/method/database.getCountries?v=5.5", function( data ) {
+			var countriesRaw = data['response']['items'];
+		  console.log( countriesRaw );
+
+		  countriesArr = countriesRaw.map(function(country) {
+		  	return country.title;
+		  });
+		  console.log(countriesArr);
+
+		  countriesRaw.forEach(function(country) {
+		  	countriesObj[country.title] = country.id;
+		  });
+		  console.log(countriesObj);
+
+		  initCountryAutocomplete();
+		});	
+	};
+
+	function initCountryAutocomplete() {
+		$( "#country" ).autocomplete({
+			source: countriesArr
+		});		
+	};
+
+	getData();
+
+	document.getElementById('submit').addEventListener('click', function() {
+		var selectedCountry = document.getElementById('country').value;
+		var selectedCountryId = countriesObj[selectedCountry];
+		console.log('selected country is', selectedCountry, selectedCountryId);
 	});
+
+
+
 });
